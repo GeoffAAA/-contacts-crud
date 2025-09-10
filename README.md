@@ -35,6 +35,40 @@ A modern, full-stack CRUD application built with Laravel 12 and Livewire 3, feat
 
 ## 🚀 Installation & Setup
 
+### Quick Start (SQLite, no DB setup)
+```bash
+# Clone
+git clone <repository-url>
+cd contacts-crud
+
+# PHP deps
+composer install
+
+# Env
+cp .env.example .env
+php artisan key:generate
+
+# Use SQLite (no server needed)
+mkdir -p database
+# Windows PowerShell (create empty file)
+ni database\database.sqlite -ItemType File -Force
+
+# Update .env
+# DB_CONNECTION=sqlite
+# (ensure any other DB_* lines are commented out)
+
+# Migrate
+php artisan migrate
+
+# Run servers (two terminals)
+# Terminal 1 (PHP)
+php artisan serve --host=127.0.0.1 --port=8000
+# Terminal 2 (Vite)
+npx vite
+```
+
+> Windows tip: Prefer `npx vite` over `npm run dev` to avoid the app picker prompt.
+
 ### 1. Clone the Repository
 ```bash
 git clone <repository-url>
@@ -46,7 +80,7 @@ cd contacts-crud
 # Install PHP dependencies
 composer install
 
-# Install Node dependencies
+# Install Node dependencies (optional if using only npx vite)
 npm install
 ```
 
@@ -61,14 +95,18 @@ php artisan key:generate
 
 ### 4. Database Setup
 ```bash
-# Run migrations (creates users and contacts tables)
-php artisan migrate
+# Option A: SQLite (recommended for local)
+ni database\database.sqlite -ItemType File -Force
+# Then set DB_CONNECTION=sqlite in .env
 
-# Optional: Seed with sample data
-php artisan db:seed
+# Option B: MySQL/PostgreSQL
+# Fill DB_* in .env with your local credentials
+
+# Run migrations
+php artisan migrate
 ```
 
-### 5. Build Assets
+### 5. Build/Serve Assets
 ```bash
 # Build for production
 npx vite build
@@ -80,7 +118,7 @@ npx vite
 ### 6. Serve the Application
 ```bash
 # Start Laravel development server
-php artisan serve
+php artisan serve --host=127.0.0.1 --port=8000
 
 # Visit http://127.0.0.1:8000
 ```
@@ -103,6 +141,11 @@ All authentication screens feature:
 - Dynamic welcome messages ("Welcome" vs "Welcome Back")
 - Security headers to prevent caching and autofill
 - App branding with "Contacts Dashboard" title
+
+### Forgot Password (no SMTP needed in dev)
+- With `MAIL_MAILER=log` (default for local), the reset email is written to `storage/logs/laravel.log`.
+- Submit your email on Forgot Password, then open the latest log and use the reset URL.
+- To send real emails later, configure SMTP (e.g., Mailtrap/SendGrid) in `.env` — no code changes needed.
 
 ## 📊 CRUD Functionality
 
@@ -213,17 +256,21 @@ routes/
 
 ### Testing
 ```bash
-# Run all tests (66 tests, 159 assertions)
+# Run all tests
 php artisan test
 
-# Run specific test suites
+# Run specific test files
 php artisan test tests/Feature/LivewireContactTest.php
 php artisan test tests/Feature/ContactTest.php
 php artisan test tests/Feature/AuthenticationTest.php
-
-# Run with coverage
-php artisan test --coverage
 ```
+
+### Troubleshooting
+- If UI changes don’t appear, ensure Vite is running: `npx vite`.
+- If Livewire modals don’t open, hard refresh (Ctrl+F5) and check browser console.
+- If routes/controllers change, clear caches: `php artisan optimize:clear`.
+- If using DB sessions/cache locally, prefer file drivers in `.env`:
+  - `SESSION_DRIVER=file`, `CACHE_STORE=file`, `QUEUE_CONNECTION=sync`.
 
 ### Test Coverage
 The application includes comprehensive test coverage:
