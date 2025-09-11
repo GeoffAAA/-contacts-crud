@@ -130,7 +130,7 @@ The app includes a complete authentication system with:
 - **Login** - Email/password authentication
 - **Registration** - New user account creation
 - **Password Reset** - Email-based password recovery
-- **Email Verification** - Optional email verification flow
+- **Email Verification** - Verification routes are included; the dashboard requires a verified email
 
 ### Auth Screens
 All authentication screens feature:
@@ -143,7 +143,7 @@ All authentication screens feature:
 - App branding with "Contacts Dashboard" title
 
 ### Forgot Password (no SMTP needed in dev)
-- With `MAIL_MAILER=log` (default for local), the reset email is written to `storage/logs/laravel.log`.
+- With `MAIL_MAILER=log` (recommended for local), the reset email is written to `storage/logs/laravel.log`.
 - Submit your email on Forgot Password, then open the latest log and use the reset URL.
 - To send real emails later, configure SMTP (e.g., Mailtrap/SendGrid) in `.env` — no code changes needed.
 
@@ -177,8 +177,8 @@ All authentication screens feature:
 - **Modern Typography**: Clean, readable font hierarchy
 
 ### Branding
-- Removed default Laravel logo
-- Added "Contacts Dashboard" branding
+- Custom "Contacts Dashboard" branding across auth and app screens
+- Default Laravel welcome page exists but is not used by app routing
 - Consistent color scheme across all pages
 - Professional, polished appearance
 
@@ -306,8 +306,7 @@ The application includes comprehensive test coverage:
 - Listeners via `#[On('eventName')]` instead of `$listeners` array
 - Pagination with `WithPagination` trait
 
-### Security Considerations
-- All routes protected with authentication middleware
+- Dashboard and profile routes protected with authentication (auth); auth pages are public
 - User data isolation (contacts are user-specific)
 - Form validation on both client and server side
 - CSRF protection enabled
@@ -323,8 +322,7 @@ The application includes comprehensive test coverage:
 - Optimized database queries with proper indexing
 - Asset optimization via Vite
 
-### Known Limitations
-- Search is case-sensitive (can be improved with database collation)
+- Search case-sensitivity depends on your database collation (SQLite default is case-insensitive)
 - No bulk operations (can be added as enhancement)
 - No export functionality (can be added as enhancement)
 - No soft deletes (can be added as enhancement)
