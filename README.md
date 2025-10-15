@@ -28,99 +28,101 @@ A modern, full-stack CRUD application built with Laravel 12 and Livewire 3, feat
 
 ## 📋 Requirements
 
-- PHP 8.2+
-- Composer
-- Node.js & NPM (for asset building)
-- SQLite (included) or MySQL/PostgreSQL
+- **PHP 8.2+** (tested with PHP 8.2.12)
+- **Composer** (tested with Composer 2.6.6)
+- **Node.js 18+** (tested with Node.js 22.17.0)
+- **SQLite** (included) or MySQL/PostgreSQL
 
 ## 🚀 Installation & Setup
 
-### Quick Start (SQLite, no DB setup)
+### Quick Start (All Platforms)
+
+#### 1. Clone and Install Dependencies
 ```bash
-# Clone
+# Clone the repository
 git clone <repository-url>
 cd contacts-crud
 
-# PHP deps
-composer install
-
-# Env
-cp .env.example .env
-php artisan key:generate
-
-# Use SQLite (no server needed)
-mkdir -p database
-# Windows PowerShell (create empty file)
-ni database\database.sqlite -ItemType File -Force
-
-# Update .env
-# DB_CONNECTION=sqlite
-# (ensure any other DB_* lines are commented out)
-
-# Migrate
-php artisan migrate
-
-# Run servers (two terminals)
-# Terminal 1 (PHP)
-php artisan serve --host=127.0.0.1 --port=8000
-# Terminal 2 (Vite)
-npx vite
-```
-
-> Windows tip: Prefer `npx vite` over `npm run dev` to avoid the app picker prompt.
-
-### 1. Clone the Repository
-```bash
-git clone <repository-url>
-cd contacts-crud
-```
-
-### 2. Install Dependencies
-```bash
 # Install PHP dependencies
 composer install
 
-# Install Node dependencies (optional if using only npx vite)
+# Install Node dependencies (for asset building)
 npm install
 ```
 
-### 3. Environment Setup
+#### 2. Environment Setup
 ```bash
-# Copy environment file
+# Copy environment file (already configured for SQLite)
 cp .env.example .env
 
 # Generate application key
 php artisan key:generate
 ```
 
-### 4. Database Setup
+#### 3. Database Setup (SQLite - Recommended)
+The `.env.example` file is already configured for SQLite. No additional setup needed!
+
 ```bash
-# Option A: SQLite (recommended for local)
-ni database\database.sqlite -ItemType File -Force
-# Then set DB_CONNECTION=sqlite in .env
-
-# Option B: MySQL/PostgreSQL
-# Fill DB_* in .env with your local credentials
-
-# Run migrations
+# Run migrations (creates database.sqlite automatically)
 php artisan migrate
 ```
 
-### 5. Build/Serve Assets
-```bash
-# Build for production
-npx vite build
+#### 4. Start the Application
 
-# Or run dev server (auto-rebuild)
+**Option A: Two Terminal Setup (Recommended for Development)**
+```bash
+# Terminal 1: Start Laravel server
+php artisan serve --host=127.0.0.1 --port=8000
+
+# Terminal 2: Start Vite dev server (for asset hot-reloading)
 npx vite
 ```
 
-### 6. Serve the Application
+**Option B: Single Terminal (Production Build)**
 ```bash
-# Start Laravel development server
-php artisan serve --host=127.0.0.1 --port=8000
+# Build assets for production
+npm run build
 
-# Visit http://127.0.0.1:8000
+# Start Laravel server only
+php artisan serve --host=127.0.0.1 --port=8000
+```
+
+#### 5. Access the Application
+Visit: **http://127.0.0.1:8000**
+
+---
+
+### Platform-Specific Notes
+
+#### 🪟 Windows
+- Use PowerShell or Command Prompt
+- All commands work as shown above
+- Prefer `npx vite` over `npm run dev` to avoid app picker prompts
+
+#### 🍎 macOS
+- Use Terminal or iTerm2
+- All commands work as shown above
+- If you get permission errors, use `sudo` for global installations
+
+#### 🐧 Linux
+- Use your preferred terminal
+- All commands work as shown above
+- Install PHP extensions if missing: `sudo apt install php-sqlite3 php-mbstring`
+
+### Alternative Database Setup
+
+#### MySQL/PostgreSQL
+```bash
+# 1. Update .env file with your database credentials
+DB_CONNECTION=mysql  # or pgsql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=contacts_crud
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+
+# 2. Run migrations
+php artisan migrate
 ```
 
 ## 🔐 Authentication
@@ -266,11 +268,23 @@ php artisan test tests/Feature/AuthenticationTest.php
 ```
 
 ### Troubleshooting
-- If UI changes don’t appear, ensure Vite is running: `npx vite`.
-- If Livewire modals don’t open, hard refresh (Ctrl+F5) and check browser console.
-- If routes/controllers change, clear caches: `php artisan optimize:clear`.
-- If using DB sessions/cache locally, prefer file drivers in `.env`:
-  - `SESSION_DRIVER=file`, `CACHE_STORE=file`, `QUEUE_CONNECTION=sync`.
+
+#### Common Issues
+- **UI changes don't appear**: Ensure Vite is running (`npx vite`) for hot-reloading
+- **Livewire modals don't open**: Hard refresh (Ctrl+F5/Cmd+Shift+R) and check browser console
+- **Routes/controllers changes**: Clear caches with `php artisan optimize:clear`
+- **Database errors**: Ensure SQLite file exists and is writable, or check MySQL/PostgreSQL connection
+
+#### Performance Tips
+- **Development**: Use two terminals (Laravel + Vite) for hot-reloading
+- **Production**: Build assets once with `npm run build`
+- **Database**: SQLite is pre-configured and requires no setup
+- **Sessions/Cache**: Default database drivers work fine; no changes needed
+
+#### Platform-Specific Issues
+- **Windows**: Use PowerShell for best compatibility
+- **macOS**: May need `sudo` for global package installations
+- **Linux**: Install missing PHP extensions: `php-sqlite3`, `php-mbstring`, `php-xml`
 
 ### Test Coverage
 The application includes comprehensive test coverage:
